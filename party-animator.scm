@@ -31,7 +31,7 @@
        )
 
     (set! nextAngle (angle counter frameCount))
-    (gimp-drawable-colorize-hsl drawable hue 70 0)
+    (gimp-drawable-colorize-hsl drawable hue 100 0)
     (gimp-item-transform-translate drawable (offsetX nextAngle offset) (offsetY nextAngle offset))
     (gimp-displays-flush)
     ))
