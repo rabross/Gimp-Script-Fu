@@ -1,10 +1,23 @@
+
 (define (script-fu-party-animator img drawable frameCount)
+
+  (define (angle frame frameCount)
+    (let (
+      (radian 6.28319))
+      (* frame (/ radian frameCount))
+    ))
+
+  (define (offsetX angle offset)
+      (* (cos angle) offset))
+
+  (define (offsetY angle offset)
+      (* (sin angle) offset))
 
   (let* (
      (hue 0)
      (counter 0)
+     (nextAngle 0)
      (new-layer drawable)
-     (radian 6.28319)
      (offset 10)
      )
 
@@ -14,12 +27,13 @@
        (gimp-drawable-colorize-hsl new-layer hue 100 0)
        (set! counter (+ counter 1))
        (set! hue (* counter (/ 360 frameCount)))
-
-       (gimp-item-transform-translate new-layer (* (cos (* counter (/ radian (+ frameCount 1)))) offset) (* (sin (* counter (/ radian (+ frameCount 1)))) offset))
+       (set! nextAngle (angle counter (+ frameCount 1)))
+       (gimp-item-transform-translate new-layer (offsetX nextAngle offset) (offsetY nextAngle offset))
        )
 
+       (set! nextAngle (angle counter frameCount))
     (gimp-drawable-colorize-hsl drawable hue 70 0)
-    (gimp-item-transform-translate drawable (* (cos (* counter (/ radian frameCount))) offset) (* (sin (* counter (/ radian frameCount))) offset))
+    (gimp-item-transform-translate drawable (offsetX nextAngle offset) (offsetY nextAngle offset))
     (gimp-displays-flush)
     ))
 
