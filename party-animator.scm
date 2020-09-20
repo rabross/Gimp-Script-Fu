@@ -1,9 +1,22 @@
-(define (script-fu-party-animator img drawable)
+
+(define (script-fu-party-animator img drawable frameCount offset)
+
+  (define (angle frame frameCount)
+    (let (
+      (radian 6.28319))
+      (* frame (/ radian frameCount))
+    ))
+
+  (define (offsetX angle offset)
+      (* (cos angle) offset))
+
+  (define (offsetY angle offset)
+      (* (sin angle) offset))
 
   (let* (
-     (frameCount 10)
      (hue 0)
      (counter 0)
+     (nextAngle 0)
      (new-layer drawable)
      )
 
@@ -13,10 +26,15 @@
        (gimp-drawable-colorize-hsl new-layer hue 100 0)
        (set! counter (+ counter 1))
        (set! hue (* counter (/ 360 frameCount)))
+       (set! nextAngle (angle counter (+ frameCount 1)))
+       (gimp-item-transform-translate new-layer (offsetX nextAngle offset) (offsetY nextAngle offset))
        )
 
+    (set! nextAngle (angle counter frameCount))
     (gimp-drawable-colorize-hsl drawable hue 70 0)
-    (gimp-displays-flush)))
+    (gimp-item-transform-translate drawable (offsetX nextAngle offset) (offsetY nextAngle offset))
+    (gimp-displays-flush)
+    ))
 
 (script-fu-register "script-fu-party-animator"
             _"Party Animator ..."
@@ -27,6 +45,8 @@
             ""
             SF-IMAGE       "Image"    0
             SF-DRAWABLE    "Drawable" 0
+            SF-VALUE       "Frames" "12"
+            SF-ADJUSTMENT  "Offset"  '(10 1 1000 1 10 0 0)
             )
 (script-fu-menu-register "script-fu-party-animator"
                          "<Toolbox>/Xtns/Languages/Script-Fu/Animation")
