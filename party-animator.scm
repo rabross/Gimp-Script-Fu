@@ -18,6 +18,8 @@
      (counter 0)
      (nextAngle 0)
      (new-layer drawable)
+     (cur-width  (car (gimp-image-width img)))
+     (cur-height (car (gimp-image-height img)))
      )
 
     (while (< counter (- frameCount 1))
@@ -33,6 +35,7 @@
     (set! nextAngle (angle counter frameCount))
     (gimp-drawable-colorize-hsl drawable hue 70 0)
     (gimp-item-transform-translate drawable (offsetX nextAngle offset) (offsetY nextAngle offset))
+    (gimp-image-crop img cur-width cur-height 0 0)
     (gimp-displays-flush)
     ))
 
