@@ -1,10 +1,10 @@
 
-(define (script-fu-party-animator img drawable frameCount offset)
+(define (script-fu-party-animator img drawable frame-count offset)
 
-  (define (angle frame frameCount)
+  (define (angle frame frame-count)
     (let (
       (radian 6.28319))
-      (* frame (/ radian frameCount))
+      (* frame (/ radian frame-count))
     ))
 
   (define (offsetX angle offset)
@@ -14,27 +14,27 @@
       (* (sin angle) offset))
 
   (let* (
-     (hue 0)
-     (counter 0)
-     (nextAngle 0)
+     (next-hue 0)
+     (next-frame 0)
+     (next-angle 0)
      (new-layer drawable)
      (cur-width  (car (gimp-image-width img)))
      (cur-height (car (gimp-image-height img)))
      )
 
-    (while (< counter (- frameCount 1))
+    (while (< next-frame (- frame-count 1))
        (set! new-layer (car (gimp-layer-copy drawable TRUE)))
+       (set! next-frame (+ next-frame 1))
+       (set! next-hue (* next-frame (/ 360 frame-count)))
+       (set! next-angle (angle next-frame frame-count))
        (gimp-image-add-layer img new-layer -1)
-       (gimp-drawable-colorize-hsl new-layer hue 100 0)
-       (set! counter (+ counter 1))
-       (set! hue (* counter (/ 360 frameCount)))
-       (set! nextAngle (angle counter (+ frameCount 1)))
-       (gimp-item-transform-translate new-layer (offsetX nextAngle offset) (offsetY nextAngle offset))
+       (gimp-drawable-colorize-hsl new-layer next-hue 100 0)
+       (gimp-item-transform-translate new-layer (offsetX next-angle offset) (offsetY next-angle offset))
        )
 
-    (set! nextAngle (angle counter frameCount))
-    (gimp-drawable-colorize-hsl drawable hue 100 0)
-    (gimp-item-transform-translate drawable (offsetX nextAngle offset) (offsetY nextAngle offset))
+    (gimp-drawable-colorize-hsl drawable 0 100 0)
+    (gimp-item-transform-translate drawable (offsetX 0 offset) (offsetY 0 offset))
+    
     (gimp-image-crop img cur-width cur-height 0 0)
     (gimp-displays-flush)
     ))
