@@ -9,3 +9,8 @@ Turn your image into a colour changing party animation
 Turn your gif into a colour changing party animation
 
 <img src="demo/party-animator-for-gifs/before.gif" width="256"/> <img src="demo/party-animator-for-gifs/after.gif" width="256"/>
+
+**[Deal With It](deal-with-it.scm)**
+Easily deal with it
+
+<img src="demo/deal-with-it/before.png" width="256"/> <img src="demo/deal-with-it/after.gif" width="256"/>
