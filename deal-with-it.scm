@@ -3,14 +3,15 @@
 
   (let* (
      (next-frame 0)
+     (frameSplit (/ frame-count  2))
      (tempSunglassesLayer)
      (tempFaceLayer (car (gimp-layer-copy drawable TRUE)))
      (sunglassesFile (car (file-png-load 1 sunglassesPath sunglassesPath)))
      (sunglassesHeight (* (/ (car (gimp-image-height sunglassesFile)) (car (gimp-image-width sunglassesFile))) sunglassesWidth))
      (sunglassesLayer (car (gimp-file-load-layer 1 img sunglassesPath)))
-     (sunglassesPosStep (/ sunglassesPositionY (- frame-count 1)))
+     (sunglassesPosStep (/ (+ (/ sunglassesHeight 2) sunglassesPositionY) (- frameSplit 1)))
      (sunglassesDestPosX (- sunglassesPositionX (/ sunglassesWidth 2)))
-     (sunglassesDestPosY (- sunglassesPositionY (/ sunglassesHeight 2)))
+     (sunglassesDestPosY (- 0 sunglassesHeight))
      )
 
         ;;; already have a face at this point
@@ -22,13 +23,14 @@
        (gimp-layer-translate tempSunglassesLayer sunglassesDestPosX sunglassesDestPosY)
        (gimp-image-merge-down img tempSunglassesLayer 0)
 
-    (while (< next-frame (- frame-count 1))
+    (while (< next-frame (- frameSplit 1))
 
         ;;;add face
        (gimp-image-add-layer img (car (gimp-layer-copy tempFaceLayer TRUE)) -1)
      
         ;;;add glasses
-       (set! sunglassesDestPosY (- sunglassesDestPosY sunglassesPosStep))
+       (set! sunglassesDestPosY (+ sunglassesDestPosY sunglassesPosStep))
+
        (set! tempSunglassesLayer (car (gimp-layer-copy sunglassesLayer TRUE)))
        (gimp-image-add-layer img tempSunglassesLayer -1)
        (gimp-layer-scale tempSunglassesLayer sunglassesWidth sunglassesHeight FALSE)
@@ -37,6 +39,22 @@
 
        (set! next-frame (+ next-frame 1))
     )
+
+    (set! next-frame 0)
+
+    ;;; repeat last frame 
+    (while (< next-frame frameSplit)
+       (gimp-image-add-layer img (car (gimp-layer-copy tempFaceLayer TRUE)) -1)
+       (set! tempSunglassesLayer (car (gimp-layer-copy sunglassesLayer TRUE)))
+       (gimp-image-add-layer img tempSunglassesLayer -1)
+       (gimp-layer-scale tempSunglassesLayer sunglassesWidth sunglassesHeight FALSE)
+       (gimp-layer-translate tempSunglassesLayer sunglassesDestPosX sunglassesDestPosY)
+       (gimp-image-merge-down img tempSunglassesLayer 0)
+
+       (set! next-frame (+ next-frame 1))
+    )
+
+
 
     (gimp-image-crop img (car (gimp-image-width img)) (car (gimp-image-height img)) 0 0)
     (gimp-displays-flush)
