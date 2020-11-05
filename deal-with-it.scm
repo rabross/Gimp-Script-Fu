@@ -38,6 +38,7 @@
        (set! next-frame (+ next-frame 1))
     )
 
+    (gimp-image-crop img (car (gimp-image-width img)) (car (gimp-image-height img)) 0 0)
     (gimp-displays-flush)
    ))
 
