@@ -1,9 +1,9 @@
 
-(define (script-fu-deal-with-it img drawable frame-count sunglassesWidth sunglassesPositionX sunglassesPositionY sunglassesPath)
+(define (script-fu-deal-with-it img drawable frameCount sunglassesWidth sunglassesPositionX sunglassesPositionY sunglassesPath)
 
   (let* (
      (next-frame 0)
-     (frameSplit (/ frame-count  2))
+     (frameSplit (/ frameCount 2))
      (tempSunglassesLayer)
      (tempFaceLayer (car (gimp-layer-copy drawable TRUE)))
      (sunglassesFile (car (file-png-load 1 sunglassesPath sunglassesPath)))
@@ -14,21 +14,16 @@
      (sunglassesDestPosY (- 0 sunglassesHeight))
      )
 
-        ;;; already have a face at this point
-        ;;; add glasses
-        ;;; end position
        (set! tempSunglassesLayer (car (gimp-layer-copy sunglassesLayer TRUE)))
        (gimp-image-add-layer img tempSunglassesLayer -1)
        (gimp-layer-scale tempSunglassesLayer sunglassesWidth sunglassesHeight FALSE)
        (gimp-layer-translate tempSunglassesLayer sunglassesDestPosX sunglassesDestPosY)
        (gimp-image-merge-down img tempSunglassesLayer 0)
 
-    (while (< next-frame (- frameSplit 1))
+     (while (< next-frame (- frameSplit 1))
 
-        ;;;add face
        (gimp-image-add-layer img (car (gimp-layer-copy tempFaceLayer TRUE)) -1)
      
-        ;;;add glasses
        (set! sunglassesDestPosY (+ sunglassesDestPosY sunglassesPosStep))
 
        (set! tempSunglassesLayer (car (gimp-layer-copy sunglassesLayer TRUE)))
@@ -38,12 +33,11 @@
        (gimp-image-merge-down img tempSunglassesLayer 0)
 
        (set! next-frame (+ next-frame 1))
-    )
+     )
 
-    (set! next-frame 0)
+     (set! next-frame 0)
 
-    ;;; repeat last frame 
-    (while (< next-frame frameSplit)
+     (while (< next-frame frameSplit)
        (gimp-image-add-layer img (car (gimp-layer-copy tempFaceLayer TRUE)) -1)
        (set! tempSunglassesLayer (car (gimp-layer-copy sunglassesLayer TRUE)))
        (gimp-image-add-layer img tempSunglassesLayer -1)
@@ -52,12 +46,11 @@
        (gimp-image-merge-down img tempSunglassesLayer 0)
 
        (set! next-frame (+ next-frame 1))
-    )
+     )
 
+     (gimp-image-crop img (car (gimp-image-width img)) (car (gimp-image-height img)) 0 0)
+     (gimp-displays-flush)
 
-
-    (gimp-image-crop img (car (gimp-image-width img)) (car (gimp-image-height img)) 0 0)
-    (gimp-displays-flush)
    ))
 
 (script-fu-register "script-fu-deal-with-it"
@@ -69,11 +62,11 @@
             ""
             SF-IMAGE       "Image"    0
             SF-DRAWABLE    "Drawable" 0
-            SF-VALUE "Frames" "2"
-            SF-VALUE "Desired Sunglasses Width" "256"
-            SF-VALUE "Desired Sunglasses Position X" "100"
-            SF-VALUE "Desired Sunglasses Position Y" "100"
-            SF-FILENAME "Sunglasses" "sunglasses.png"
+            SF-VALUE       "Frames" "20"
+            SF-VALUE       "Desired Sunglasses Width" "256"
+            SF-VALUE       "Desired Sunglasses Finish Position X" "100"
+            SF-VALUE       "Desired Sunglasses Finish Position Y" "100"
+            SF-FILENAME    "Sunglasses Image" "sunglasses.png"
             )
 (script-fu-menu-register "script-fu-deal-with-it"
                          "<Toolbox>/Xtns/Languages/Script-Fu/Animation")
