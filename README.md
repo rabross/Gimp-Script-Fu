@@ -25,7 +25,7 @@ Easily deal with it
 
 ## Install
 
-Taken from the GIMP docs: https://docs.gimp.org/en/install-script-fu.html
+Copypasted from the GIMP docs: https://docs.gimp.org/en/install-script-fu.html
 
 1. If you have downloaded a script, copy or move it to your scripts directory. It can be found in the Preferences: Folders → Scripts.
 
