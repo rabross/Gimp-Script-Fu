@@ -30,3 +30,5 @@ Copypasted from the GIMP docs: https://docs.gimp.org/en/install-script-fu.html
 1. If you have downloaded a script, copy or move it to your scripts directory. It can be found in the Preferences: Folders → Scripts.
 
 2. Do a refresh by using Filters → Script-Fu → Refresh Scripts from the image menubar. The script will now appear in one of your menus. If you don't find it, look for it under the root file menu filters. If it doesn't appear at all, something was wrong with the script (e.g. it contains syntax errors).
+
+![gimp-script-fu-menu](https://user-images.githubusercontent.com/3681815/193560766-c7390ac9-7c83-465f-a510-387f2d5ea5b7.png)
